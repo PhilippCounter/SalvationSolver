@@ -14,16 +14,6 @@ interface IProps extends AppProps {
 }
 
 function MyApp({ Component, pageProps: { session, ...pageProps }, allowedSpecialEndpoints }: IProps) {
-
-  const { pathname } = useRouter();
-
-  const [ loading, setLoading ] = useState<boolean>( false );
-  const [ toggled, setToggled ] = useState<boolean>( false );
-
-  const handleToggleSidebar = ( state : boolean ) => {
-    setToggled(state);
-  }
-
   return <div className="app" style={{ 
     height : '100%',
     width : '100%',
