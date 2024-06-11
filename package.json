@@ -4,7 +4,9 @@
   "description": "solves the 4th encounter of the salvations edge raid",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "next dev",
+    "build": "next build",
+    "start": "next build && next start"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,21 @@
   "bugs": {
     "url": "https://github.com/PhilippCounter/SalvationSolver/issues"
   },
-  "homepage": "https://github.com/PhilippCounter/SalvationSolver#readme"
+  "homepage": "https://github.com/PhilippCounter/SalvationSolver#readme",
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "next": "^14.2.3",
+    "react-bootstrap": "^2.10.2",
+    "react-dom": "^18.3.1",
+    "rect": "^1.2.1",
+    "sass": "^1.77.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "eslint": "^9.4.0",
+    "typescript": "^5.4.5"
+  }
 }
