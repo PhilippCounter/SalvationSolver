@@ -1,0 +1,19 @@
+{
+  "name": "salvation_solver",
+  "version": "1.0.0",
+  "description": "solves the 4th encounter of the salvations edge raid",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PhilippCounter/SalvationSolver.git"
+  },
+  "author": "Philipp_Counter",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PhilippCounter/SalvationSolver/issues"
+  },
+  "homepage": "https://github.com/PhilippCounter/SalvationSolver#readme"
+}
