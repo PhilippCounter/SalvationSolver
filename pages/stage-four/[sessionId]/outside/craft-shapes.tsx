@@ -18,37 +18,37 @@ const shapeLibrary = {
         combination : [ Symbols.CIRCLE, Symbols.CIRCLE ],
         name        : 'Sphere',
         identifier  : 'sphere',
-        author      : 'https://www.flaticon.com/authors/pixel-perfect',
+        author      : 'me',
     },
     'cube' : {
         combination : [ Symbols.SQUARE, Symbols.SQUARE ],
         name        : 'Cube',
         identifier  : 'cube',
-        author      : 'https://www.freepik.com/',
+        author      : 'me',
     },
     'pyramid' : {
         combination : [ Symbols.TRIANGLE, Symbols.TRIANGLE ],
         name        : 'Pyramid',
         identifier  : 'pyramid',
-        author      : 'https://www.flaticon.com/authors/deemakdaksina',
+        author      : 'me',
     },
     'cylinder' : {
         combination : [ Symbols.SQUARE, Symbols.CIRCLE ],
         name        : 'Cylinder',
         identifier  : 'cylinder',
-        author      : 'https://www.flaticon.com/authors/xinh-studio',
+        author      : 'me',
     },
     'prism' : {
         combination : [ Symbols.TRIANGLE, Symbols.SQUARE ],
         name        : 'Prism',
         identifier  : 'prism',
-        author      : 'https://www.freepik.com/',
+        author      : 'me',
     },
     'cone' : {
         combination : [ Symbols.TRIANGLE, Symbols.CIRCLE ],
         name        : 'Cone',
         identifier  : 'cone',
-        author      : 'https://thenounproject.com/creator/kozinn/',
+        author      : 'me',
     },
 }
 
