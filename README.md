@@ -35,4 +35,5 @@ outside:
 - put the symbols into the correct shape line by line
 - after all is done, click "next round"
 
-<img src="https://github.com/PhilippCounter/SalvationSolver/assets/34789670/18d6eb96-c089-4fa5-a6d5-2aa734d00c6a" width="300">
+<img src="https://github.com/PhilippCounter/SalvationSolver/assets/34789670/eb10d1dd-7878-4aef-9b59-892ed94f794c" width="300">
+
