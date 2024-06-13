@@ -1,6 +1,7 @@
 import { Container, Row, Col, Card, CardFooter, Form, Button } from 'react-bootstrap'
 import React, { useEffect, useState } from "react";
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { useRouter } from 'next/router';
 
@@ -22,6 +23,10 @@ export default function Create( props: IProps ) {
 
     const [ sessionId, setSessionId ] = useState<string|undefined>(props.sessionId);
     const [ sessionData, setSessionData ] = useState<SessionData|undefined>();
+    const [ targetSide, setTargetSide ] = useState<keyof InnerSymbols|"none">(props.targetSide);
+    const [ targetSymbol, setTargetSymbol ] = useState<Symbols|"none">(props.targetSymbol);
+
+    const [ playerSelection, setPlayerSelection ] = useState<any>();
 
     if ( !sessionId ) {
         return <Container>
@@ -40,6 +45,10 @@ export default function Create( props: IProps ) {
         </Container>
     }
 
+    const delay = millis => new Promise((resolve, reject) => {
+        setTimeout(_ => resolve(undefined), millis)
+    });
+
     const waitForAllPlayerData = async () => {
         let newSessionData = ( await axios({
             method: 'POST',
@@ -49,9 +58,41 @@ export default function Create( props: IProps ) {
 
         let waitingForSymbols = Object.keys( newSessionData.innerSymbols ).filter( (side) => newSessionData.innerSymbols[side].main === undefined ).length;
 
-        if ( waitingForSymbols >= 1 ) return;
+        setPlayerSelection( newSessionData.innerSymbols[targetSide] );
+
+        if ( waitingForSymbols >= 2 ) { 
+            await delay(1000);
+            await waitForAllPlayerData();
+            return;
+        }
 
         let called_symbols = newSessionData.innerSymbols;
+
+
+        if ( waitingForSymbols == 1 ) {
+            let possible_sides   = [ 'left', 'middle', 'right' ] as Array<keyof InnerSymbols>;
+            let possible_mains   = [ Symbols.CIRCLE, Symbols.SQUARE, Symbols.TRIANGLE ];
+            let possible_symbols = [ Symbols.CIRCLE, Symbols.CIRCLE, Symbols.SQUARE, Symbols.SQUARE, Symbols.TRIANGLE, Symbols.TRIANGLE ];
+
+            Object.keys( called_symbols ).forEach( ( side : keyof InnerSymbols ) => {
+                if ( called_symbols[side].main ) {
+                    possible_sides.splice( possible_sides.indexOf(side), 1 );
+                    possible_mains.splice( possible_mains.indexOf(called_symbols[side].main), 1 );
+                    called_symbols[side].symbols.forEach( ( symbol ) => {
+                        possible_symbols.splice( possible_symbols.indexOf( symbol ), 1 );
+                    } )
+                }
+            } );
+
+            if ( targetSide == 'none' ) {
+                setTargetSide( possible_sides[0] );
+                setTargetSymbol( possible_mains[0] );
+            }
+
+            called_symbols[possible_sides[0]].main    = possible_mains[0];
+            called_symbols[possible_sides[0]].symbols = possible_symbols;
+        } 
+
         let side_calls = Object.keys( called_symbols ) as Array<keyof InnerSymbols>;
 
         side_calls.forEach( ( own_side : keyof InnerSymbols ) => {
@@ -153,13 +194,36 @@ export default function Create( props: IProps ) {
                         <Row className='pt-0'>
                             <Col>Current session:</Col><Col><Link href={'/stage-two/' + sessionId + '/role-select'}>{sessionId}</Link></Col>
                         </Row>
+                        <Row className='p-2 pt-3'>
+                            { playerSelection && <div>
+                                your symbol:<br/>
+                                <Button><Image
+                                    src={SymbolData[playerSelection.main]?.icon}
+                                    width={25}
+                                    height={25}
+                                    alt={''}
+                                /></Button>
+                            </div> }
+                        </Row>
+                        <Row className='p-2 pt-3'>
+                            { playerSelection && <div>
+                                your selection:<br/>
+                                { playerSelection.symbols.map( (symbol) => <Button style={{marginRight: '10px'}}>
+                                    <Image
+                                        src={SymbolData[symbol]?.icon}
+                                        width={25}
+                                        height={25}
+                                        alt={''}
+                                    />
+                                </Button> 
+                                )}
+                            </div> }
+                        </Row>
                     </Card.Body>
                 </Card>
             </Row>
         </Container>
     }
-
-    console.log( sessionData.innerSymbols );
 
     return <Container>
         <Row className='p-2'>
@@ -173,17 +237,36 @@ export default function Create( props: IProps ) {
                     </Row>
                     <Row className='p-2 pt-3'>
                         <Col>
-                            { sessionData.innerSymbols[props.targetSide].output.map(( output, idx ) => {
-                                return <div key={ idx } style={{ marginBottom: '15px' }}>
-                                    <Button>{ SymbolData[output.symbol].text }</Button> → <Button>{ SymbolData[sessionData.innerSymbols[output.target].main].text }</Button>
-                                </div>
-                            }) }
+                            <table>
+                                { targetSide != 'none' && targetSymbol != 'none' && sessionData.innerSymbols[targetSide].output.map(( output, idx ) => {
+                                    return <tr key={ idx } style={{ height: '80px' }}>
+                                        <td><Button style={{ height: '70px', width: '70px' }}>
+                                                <Image
+                                                    src={SymbolData[output.symbol]?.icon}
+                                                    width={25}
+                                                    height={25}
+                                                    alt={''}
+                                                />
+                                        </Button></td> 
+                                        <td style={{ width: '50px', textAlign: 'center' }}>→</td>
+                                        <td><Button style={{ height: '70px', width: '80px' }}>
+                                                {output.target}<br/>
+                                                <Image
+                                                    src={SymbolData[sessionData.innerSymbols[output.target].main]?.icon}
+                                                    width={25}
+                                                    height={25}
+                                                    alt={''}
+                                                />
+                                        </Button></td> 
+                                    </tr>
+                                }) }
+                            </table>
                         </Col>
                     </Row>
                 </Card.Body>
                 <Card.Footer>
                     <Row className='p-2 pt-3'>
-                        <Col><Button style={{width:'100%'}} onClick={() => resetSymbols()}>Reset all symbols</Button></Col>
+                        <Col><Button style={{width:'100%'}} onClick={() => resetSymbols()}>next round</Button></Col>
                     </Row>
                 </Card.Footer>
             </Card>

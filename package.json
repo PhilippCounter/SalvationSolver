@@ -4,7 +4,7 @@
   "description": "solves the 4th encounter of the salvations edge raid",
   "main": "index.js",
   "scripts": {
-    "test": "next dev",
+    "dev": "next build && next start -p 80",
     "build": "next build",
     "start": "next build && next start"
   },

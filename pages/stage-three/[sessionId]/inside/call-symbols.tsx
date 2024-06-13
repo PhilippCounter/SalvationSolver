@@ -1,6 +1,7 @@
 import { Container, Row, Col, Card, CardFooter, Form, Button } from 'react-bootstrap'
 import React, { useEffect, useState } from "react";
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { useRouter } from 'next/router';
 
@@ -21,8 +22,10 @@ export default function Create( props: IProps ) {
     const [ sessionId, setSessionId ] = useState<string|undefined>(props.sessionId);
     const [ targetSide, setTargetSide ] = useState<string|undefined>();
     const [ targetSymbol, setTargetSymbol ] = useState<Symbols|undefined>();
-
     const [ wallSymbols, setWallSymbols ] = useState<Symbols[]>([]);
+    const [ sessionData, setSessionData ] = useState<SessionData|undefined>();
+
+
 
     const addWallSymbol = ( symbol ) => {
         let newWallSymbols = [ ...wallSymbols ];
@@ -34,24 +37,46 @@ export default function Create( props: IProps ) {
         let newWallSymbols = [ ...wallSymbols ];
 
         let index = newWallSymbols.findIndex( (el) => el == symbol );
-        console.log( index );
         newWallSymbols.splice(index,1) 
         setWallSymbols(newWallSymbols);
     }
 
     const lockSymbols = async () => {
-        let wasUpdated = ( await axios({
-            method: 'POST',
-            url: baseUrl + '/api/' + sessionId + '/update',
-            data: {
-                targetSide, 
-                mainSymbol: targetSymbol, 
-                shadowSymbols: wallSymbols
-            },
-        }) ).status == 200;
+        if ( targetSide && targetSymbol && wallSymbols.length > 0 ) {
+            let wasUpdated = ( await axios({
+                method: 'POST',
+                url: baseUrl + '/api/' + sessionId + '/update',
+                data: {
+                    targetSide, 
+                    mainSymbol: targetSymbol, 
+                    shadowSymbols: wallSymbols
+                },
+            }) ).status == 200;
+        }
 
-        router.push('/stage-four/' + sessionId + '/inside/' + targetSide + '/' + targetSymbol + '/results');
+        router.push('/stage-four/' + sessionId + '/inside/' + (targetSide || 'none') + '/' + (targetSymbol || 'none') + '/results');
     }
+
+    /*
+    const waitForAllPlayerData = async () => {
+        let newSessionData = ( await axios({
+            method: 'POST',
+            url: baseUrl + '/api/' + sessionId + '/get',
+            data: {},
+        }) ).data as SessionData;
+
+        let waitingForSymbols = Object.keys( newSessionData.innerSymbols ).filter( (side) => newSessionData.innerSymbols[side].main === undefined ).length;
+
+        if ( waitingForSymbols >= 1 ) { 
+            await delay(1000);
+            await waitForAllPlayerData();
+            return;
+        }
+    }
+
+    useEffect(() => {
+        waitForAllPlayerData();
+    },[sessionId]);*/
 
     if ( !sessionId ) {
         return <Container>
@@ -92,14 +117,35 @@ export default function Create( props: IProps ) {
                         </Col>
                     </Row>
                     <Row className='p-2 pt-3'>
-                    <Col>
-                            <Button style={{width:'100%'}} className={ targetSymbol == Symbols.CIRCLE ? 'bg-success' : '' } onClick={() => setTargetSymbol(Symbols.CIRCLE)}>Circle</Button>
+                        <Col>
+                            <Button style={{width:'100%'}} className={ targetSymbol == Symbols.CIRCLE ? 'bg-success' : '' } onClick={() => setTargetSymbol(Symbols.CIRCLE)}>
+                                <Image
+                                    src={SymbolData[Symbols.CIRCLE]?.icon}
+                                    width={25}
+                                    height={25}
+                                    alt={''}
+                                />
+                            </Button>
                         </Col>
                         <Col>
-                            <Button style={{width:'100%'}} className={ targetSymbol == Symbols.SQUARE ? 'bg-success' : '' } onClick={() => setTargetSymbol(Symbols.SQUARE)}>Square</Button>
+                            <Button style={{width:'100%'}} className={ targetSymbol == Symbols.SQUARE ? 'bg-success' : '' } onClick={() => setTargetSymbol(Symbols.SQUARE)}>
+                                <Image
+                                    src={SymbolData[Symbols.SQUARE]?.icon}
+                                    width={25}
+                                    height={25}
+                                    alt={''}
+                                />
+                            </Button>
                         </Col>
                         <Col>
-                            <Button style={{width:'100%'}} className={ targetSymbol == Symbols.TRIANGLE ? 'bg-success' : '' } onClick={() => setTargetSymbol(Symbols.TRIANGLE)}>Triangle</Button>
+                            <Button style={{width:'100%'}} className={ targetSymbol == Symbols.TRIANGLE ? 'bg-success' : '' } onClick={() => setTargetSymbol(Symbols.TRIANGLE)}>
+                                <Image
+                                    src={SymbolData[Symbols.TRIANGLE]?.icon}
+                                    width={25}
+                                    height={25}
+                                    alt={''}
+                                />
+                            </Button>
                         </Col>
                     </Row>
                     
@@ -113,13 +159,41 @@ export default function Create( props: IProps ) {
                 </Card.Header>
                 <Card.Body>
                     <Row className='p-2 pt-0'>
-                        <Col><Button style={{width:'100%'}} onClick={() => addWallSymbol( Symbols.SQUARE )}>Square</Button></Col>
-                        <Col><Button style={{width:'100%'}} onClick={() => addWallSymbol( Symbols.CIRCLE )}>Circle</Button></Col>
-                        <Col><Button style={{width:'100%'}} onClick={() => addWallSymbol( Symbols.TRIANGLE )}>Triangle</Button></Col>
+                        <Col><Button style={{width:'100%'}} onClick={() => addWallSymbol( Symbols.SQUARE )}>
+                            <Image
+                                src={SymbolData[Symbols.SQUARE]?.icon}
+                                width={25}
+                                height={25}
+                                alt={''}
+                            />    
+                        </Button></Col>
+                        <Col><Button style={{width:'100%'}} onClick={() => addWallSymbol( Symbols.CIRCLE )}>
+                            <Image
+                                src={SymbolData[Symbols.CIRCLE]?.icon}
+                                width={25}
+                                height={25}
+                                alt={''}
+                            />
+                        </Button></Col>
+                        <Col><Button style={{width:'100%'}} onClick={() => addWallSymbol( Symbols.TRIANGLE )}>
+                            <Image
+                                src={SymbolData[Symbols.TRIANGLE]?.icon}
+                                width={25}
+                                height={25}
+                                alt={''}
+                            /> 
+                        </Button></Col>
                     </Row>
                     <Row className='p-2 pt-4'>
                         { wallSymbols.map(( symbol, idx ) => {
-                            return <Col key={ idx }><Button className="bg-success" style={{width:'100%'}} onClick={() => removeWallSymbol( symbol )}>{ SymbolData[ symbol ].text }</Button></Col>;
+                            return <Col key={ idx }><Button className="bg-success" style={{width:'100%'}} onClick={() => removeWallSymbol( symbol )}>
+                                <Image
+                                    src={ SymbolData[ symbol ]?.icon }
+                                    width={25}
+                                    height={25}
+                                    alt={''}
+                                />
+                            </Button></Col>;
                         })}
                     </Row>
                 </Card.Body>

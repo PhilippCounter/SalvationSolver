@@ -1,3 +1,8 @@
+import TriangleIcon from 'bootstrap-icons/icons/triangle-fill.svg';
+import SquareIcon from 'bootstrap-icons/icons/square-fill.svg';
+import CircleIcon from 'bootstrap-icons/icons/circle-fill.svg';
+
+
 export enum Symbols {
     TRIANGLE = 0,
     SQUARE   = 1,
@@ -5,9 +10,9 @@ export enum Symbols {
 }
 
 export const SymbolData = [
-    { text: 'Triangle', link: '' },
-    { text: 'Square', link: '' },
-    { text: 'Circle', link: '' },
+    { text: 'Triangle', link: '', icon: TriangleIcon },
+    { text: 'Square', link: '', icon: SquareIcon },
+    { text: 'Circle', link: '', icon: CircleIcon },
 ]
 
 export type SymbolChange = {

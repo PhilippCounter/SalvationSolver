@@ -22,7 +22,7 @@ export default function Join() {
                     </Row>
                 </Card.Body>
                 <Card.Footer className='text-center'>
-                    <Link href={'/stage-two/' + sessionId + '/role-select'}><Button style={{width:'40%'}}>Join</Button></Link>
+                    { sessionId && <Link href={'/stage-two/' + sessionId + '/role-select'}><Button style={{width:'40%'}}>Join</Button></Link> }
                 </Card.Footer>
             </Card>
         </Row>

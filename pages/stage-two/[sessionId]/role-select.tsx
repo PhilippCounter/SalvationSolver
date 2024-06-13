@@ -22,7 +22,7 @@ export default function Create( props: IProps ) {
                     </Row>
                     <Row className='p-2 pt-4'>
                         <Col><Link href={'/stage-three/' + sessionId + '/inside/call-symbols'}><Button style={{width:'80%'}}>Solo Room</Button></Link></Col>
-                        <Col><Button style={{width:'80%'}}>Outside</Button></Col>
+                        <Col><Link href={'/stage-four/' + sessionId + '/outside/craft-shapes'}><Button style={{width:'80%'}}>Outside</Button></Link></Col>
                     </Row>
                 </Card.Body>
             </Card>
