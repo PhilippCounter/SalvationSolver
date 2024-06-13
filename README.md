@@ -14,6 +14,7 @@ solo room:
 ( it is enough if 2 players do this, the 3rd can just submit without input )
 - wait for other players
 - put the symbols in the correct statue
+- after all is done, click "next round"
   
 outside:
 - wait for other players
