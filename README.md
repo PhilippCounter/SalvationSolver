@@ -2,7 +2,7 @@
 solves the 4th encounter of the salvation raid
 
 Demo:
-http://salvationsolver.philipp_counter.selfhost.eu
+https://salvationsolver.philipp-counter.de
 
 <img src="https://github.com/PhilippCounter/SalvationSolver/assets/34789670/654a99a1-7fd7-446c-9f2c-89c4dc0874f8" width="300">
 
